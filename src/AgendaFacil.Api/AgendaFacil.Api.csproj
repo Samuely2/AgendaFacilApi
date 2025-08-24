@@ -2,10 +2,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AgendaFacil.CrossCutting\AgendaFacil.CrossCutting.csproj" />
     <ProjectReference Include="..\AgendaFacil.Application\AgendaFacil.Application.csproj" />
     <ProjectReference Include="..\AgendaFacil.Infrastructure\AgendaFacil.Infrastructure.csproj" />
   </ItemGroup>

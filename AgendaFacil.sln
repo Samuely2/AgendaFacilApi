@@ -5,21 +5,20 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8466AEAD-F765-4916-82A7-3C49246B3BD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaFacil.Domain", "src\AgendaFacil.Domain\AgendaFacil.Domain.csproj", "{9D9BDEB8-319D-4F10-BD7C-C12D74819368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaFacil.Domain", "src\AgendaFacil.Domain\AgendaFacil.Domain.csproj", "{9D9BDEB8-319D-4F10-BD7C-C12D74819368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaFacil.Application", "src\AgendaFacil.Application\AgendaFacil.Application.csproj", "{DB5380FE-0D81-4890-BF2D-3AFF99BE0833}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaFacil.Application", "src\AgendaFacil.Application\AgendaFacil.Application.csproj", "{DB5380FE-0D81-4890-BF2D-3AFF99BE0833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaFacil.Infrastructure", "src\AgendaFacil.Infrastructure\AgendaFacil.Infrastructure.csproj", "{7DA4654A-8FC6-4111-9241-F3CC6E4C168A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaFacil.Infrastructure", "src\AgendaFacil.Infrastructure\AgendaFacil.Infrastructure.csproj", "{7DA4654A-8FC6-4111-9241-F3CC6E4C168A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaFacil.Api", "src\AgendaFacil.Api\AgendaFacil.Api.csproj", "{B065DA17-6744-4B54-93AE-77B6DCC7587C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendaFacil.Api", "src\AgendaFacil.Api\AgendaFacil.Api.csproj", "{B065DA17-6744-4B54-93AE-77B6DCC7587C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaFacil.CrossCutting", "AgendaFacil.CrossCutting\AgendaFacil.CrossCutting.csproj", "{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9D9BDEB8-319D-4F10-BD7C-C12D74819368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,11 +37,22 @@ Global
 		{B065DA17-6744-4B54-93AE-77B6DCC7587C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B065DA17-6744-4B54-93AE-77B6DCC7587C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B065DA17-6744-4B54-93AE-77B6DCC7587C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9D9BDEB8-319D-4F10-BD7C-C12D74819368} = {8466AEAD-F765-4916-82A7-3C49246B3BD6}
 		{DB5380FE-0D81-4890-BF2D-3AFF99BE0833} = {8466AEAD-F765-4916-82A7-3C49246B3BD6}
 		{7DA4654A-8FC6-4111-9241-F3CC6E4C168A} = {8466AEAD-F765-4916-82A7-3C49246B3BD6}
 		{B065DA17-6744-4B54-93AE-77B6DCC7587C} = {8466AEAD-F765-4916-82A7-3C49246B3BD6}
+		{B58248E5-1A3A-4FDC-AF5B-C8187C0B6BE5} = {8466AEAD-F765-4916-82A7-3C49246B3BD6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B37A2832-61C1-4231-A937-D2284A0BAF47}
 	EndGlobalSection
 EndGlobal
