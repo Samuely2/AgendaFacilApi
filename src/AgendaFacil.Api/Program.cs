@@ -41,12 +41,12 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("DevelopmentPolicy",
-        builder =>
+    options.AddPolicy("LocalhostCorsPolicy",
+        policy =>
         {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
+            policy.WithOrigins("http://localhost:5500", "http://127.0.0.1:5500")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
         });
 });
 
@@ -63,6 +63,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("LocalhostCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
