@@ -16,15 +16,21 @@ namespace JWTAuthentication.Controllers
     [ApiController]
     public class AuthenticateController : BaseController
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole<Guid>> roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager,
-            IConfiguration configuration, NotificationContext notificationContext) : base(notificationContext)
+        public AuthenticateController(
+               UserManager<ApplicationUser> userManager,
+               RoleManager<IdentityRole<Guid>> roleManager,
+               SignInManager<ApplicationUser> signInManager,
+               IConfiguration configuration,
+               NotificationContext notificationContext) : base(notificationContext)
         {
-            this.userManager = userManager;
-            this.roleManager = roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
             _configuration = configuration;
         }
 
@@ -34,18 +40,22 @@ namespace JWTAuthentication.Controllers
         [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO dto)
         {
-            var user = await userManager.FindByEmailAsync(dto.Email);
-            if (user != null && await userManager.CheckPasswordAsync(user, dto.Password))
-            {
-                var userRoles = await userManager.GetRolesAsync(user);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return Unauthorized("Usuário não encontrado");
 
-                    var authClaims = new List<Claim>
+            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+            if (!result.Succeeded) return Unauthorized("Credenciais inválida");
+
+            
+              var roles = await _userManager.GetRolesAsync(user);
+
+                var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Email!),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };                           
+                };
 
-                foreach (var userRole in userRoles)
+            foreach (var userRole in roles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
@@ -53,20 +63,17 @@ namespace JWTAuthentication.Controllers
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
                 var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
                     expires: DateTime.Now.AddHours(3),
-                    claims: authClaims,
+                    claims: authClaims, 
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
-            }
-            return Unauthorized();
+                    expiration = token.ValidTo,
+                    roles
+                });                        
         }
         
         [HttpPost]
@@ -75,28 +82,30 @@ namespace JWTAuthentication.Controllers
         [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Register([FromBody] CreateUserRequestDTO dto)
         {
-            var userExists = await userManager.FindByEmailAsync(dto.Email);
+            var userExists = await _userManager.FindByEmailAsync(dto.Email);
+
             if (userExists != null)
             {
                 _notificationContext.AddNotification("Usuário", "Usuário ja existe");                
             }
 
-             ApplicationUser user = new ApplicationUser()
+            ApplicationUser user = new ApplicationUser()
             {
                 Email = dto.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = dto.Username       
             };
-            var result = await userManager.CreateAsync(user, dto.Password);
+
+            var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
             {
-                _notificationContext.AddNotification("Erro", "Ocorreu um problema na criação do usuário");
+                _notificationContext.AddNotification("Erro", $"Ocorreu um problema na criação do usuário: {result.Errors.ToString}");
             }          
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, dto.Role);
+                await _userManager.AddToRoleAsync(user, dto.Role);
             }
 
             return CreateResponse(result, 200);
@@ -107,7 +116,7 @@ namespace JWTAuthentication.Controllers
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] CreateUserRequestDTO dto)
         {
-            var userExists = await userManager.FindByNameAsync(dto.Username);
+            var userExists = await _userManager.FindByNameAsync(dto.Username);
             if (userExists != null)
             {
                 _notificationContext.AddNotification("Usuário", "Usuário ja existe");
@@ -119,24 +128,24 @@ namespace JWTAuthentication.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = dto.Username
             };
-            var result = await userManager.CreateAsync(user, dto.Password);
+            var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
             {
                 _notificationContext.AddNotification("Erro", "Erro ao criar o usuário");
             }
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-                await roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.Admin));
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.Client))
-                await roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.Client));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Client))
+                await _roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.Client));
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.ServiceProvider))
-                await roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.ServiceProvider));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.ServiceProvider))
+                await _roleManager.CreateAsync(new IdentityRole<Guid>(UserRoles.ServiceProvider));
 
-            if (await roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
-                await userManager.AddToRoleAsync(user, UserRoles.Admin);
+                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
             return CreateResponse(result, 200);
