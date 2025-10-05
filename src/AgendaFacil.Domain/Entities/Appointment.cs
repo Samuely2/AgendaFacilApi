@@ -10,9 +10,10 @@ public class Appointment : BaseEntity
     public int DurationInMinutes { get; set; }
     public Guid UserId { get; set; }
     public virtual ApplicationUser? User { get; set; }
-    public int ServiceId { get; set; }
+    public Guid ServiceId { get; set; }
     public virtual Service? Service { get; set; }
-    public int ServiceProviderId { get; set; }
-    public virtual ServiceProvider? ServiceProvider { get; set; }
+    public Guid? ServiceProviderId { get; set; }
+    public virtual ServiceProviderProfile? ServiceProvider { get; set; }
+
 }
 

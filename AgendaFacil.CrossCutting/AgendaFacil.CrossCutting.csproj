@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\src\AgendaFacil.Application\AgendaFacil.Application.csproj" />
     <ProjectReference Include="..\src\AgendaFacil.Domain\AgendaFacil.Domain.csproj" />
+    <ProjectReference Include="..\src\AgendaFacil.Infrastructure\AgendaFacil.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

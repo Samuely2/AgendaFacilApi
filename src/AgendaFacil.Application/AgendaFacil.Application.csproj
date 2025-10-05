@@ -11,6 +11,10 @@
     <ProjectReference Include="..\AgendaFacil.Domain\AgendaFacil.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mapper\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

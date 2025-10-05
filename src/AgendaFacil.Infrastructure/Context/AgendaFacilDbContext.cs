@@ -8,10 +8,11 @@ public class AgendaFacilDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public AgendaFacilDbContext(DbContextOptions<AgendaFacilDbContext> options)
         : base(options) { }
 
-    public DbSet<ServiceProvider> ServiceProviderProfiles { get; set; }
+    public DbSet<ServiceProviderProfile> ServiceProviderProfiles { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Availability> Availabilities { get; set; }
+    public DbSet<Absence> Absences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,11 +28,13 @@ public class AgendaFacilDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<ApplicationUser>()
                .HasOne(u => u.ServiceProviderProfile)
                .WithOne(sp => sp.User)
-               .HasForeignKey<ServiceProvider>(sp => sp.UserId);
+               .HasForeignKey<ServiceProviderProfile>(sp => sp.UserId);
 
-        builder.Entity<ServiceProvider>()
-               .HasMany(sp => sp.Services)
-               .WithMany(s => s.ServiceProviders);
+        builder.Entity<ServiceProviderProfile>()
+            .HasMany(sp => sp.Absences)
+            .WithOne(a => a.ServiceProviderProfile)
+            .HasForeignKey(a => a.ServiceProviderProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Appointment>(entity =>
         {
@@ -49,8 +52,7 @@ public class AgendaFacilDbContext : IdentityDbContext<ApplicationUser, IdentityR
                   .WithMany()
                   .HasForeignKey(a => a.ServiceId)
                   .OnDelete(DeleteBehavior.Restrict);
-        });
-
+        });       
     }
 
 }

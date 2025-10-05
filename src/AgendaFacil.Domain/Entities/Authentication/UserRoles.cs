@@ -1,4 +1,4 @@
-﻿namespace AgendaFacil.Domain.Authentication;
+﻿namespace AgendaFacil.Domain.Entities.Authentication;
 
 public static class UserRoles
 {

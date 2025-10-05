@@ -23,14 +23,15 @@ namespace AgendaFacil.Infrastructure.Migrations
 
             modelBuilder.Entity("Absence", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
@@ -38,32 +39,39 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ServiceProviderId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ServiceProviderProfileId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceProviderId");
+                    b.HasIndex("ServiceProviderProfileId");
 
-                    b.ToTable("Absence");
+                    b.ToTable("Absences");
                 });
 
             modelBuilder.Entity("AgendaFacil.Domain.Entities.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("DurationInMinutes")
                         .HasColumnType("int");
@@ -74,11 +82,11 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ServiceProviderId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ServiceProviderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
@@ -86,11 +94,17 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -105,14 +119,15 @@ namespace AgendaFacil.Infrastructure.Migrations
 
             modelBuilder.Entity("AgendaFacil.Domain.Entities.Availability", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
@@ -120,32 +135,39 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
 
-                    b.Property<int?>("ServiceProviderId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ServiceProviderProfileId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceProviderId");
+                    b.HasIndex("ServiceProviderProfileId");
 
                     b.ToTable("Availabilities");
                 });
 
             modelBuilder.Entity("AgendaFacil.Domain.Entities.Service", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("DefaultDurationInMinutes")
                         .HasColumnType("int");
@@ -159,38 +181,52 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProvider", b =>
+            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProviderProfile", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Speciality")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("UpdatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("ServiceProviderProfiles");
                 });
@@ -395,30 +431,29 @@ namespace AgendaFacil.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ServiceServiceProvider", b =>
+            modelBuilder.Entity("ServiceServiceProviderProfile", b =>
                 {
-                    b.Property<int>("ServiceProvidersId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ServiceProvidersId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ServicesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ServicesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ServiceProvidersId", "ServicesId");
 
                     b.HasIndex("ServicesId");
 
-                    b.ToTable("ServiceServiceProvider");
+                    b.ToTable("ServiceServiceProviderProfile");
                 });
 
             modelBuilder.Entity("Absence", b =>
                 {
-                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProvider", "ServiceProvider")
+                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProviderProfile", "ServiceProviderProfile")
                         .WithMany("Absences")
-                        .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ServiceProviderProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("ServiceProvider");
+                    b.Navigation("ServiceProviderProfile");
                 });
 
             modelBuilder.Entity("AgendaFacil.Domain.Entities.Appointment", b =>
@@ -429,11 +464,10 @@ namespace AgendaFacil.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProvider", "ServiceProvider")
+                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProviderProfile", "ServiceProvider")
                         .WithMany("Appointments")
                         .HasForeignKey("ServiceProviderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ApplicationUser", "User")
                         .WithMany("Appointments")
@@ -450,20 +484,18 @@ namespace AgendaFacil.Infrastructure.Migrations
 
             modelBuilder.Entity("AgendaFacil.Domain.Entities.Availability", b =>
                 {
-                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProvider", "ServiceProvider")
+                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProviderProfile", "ServiceProviderProfile")
                         .WithMany("Availabilities")
-                        .HasForeignKey("ServiceProviderId");
+                        .HasForeignKey("ServiceProviderProfileId");
 
-                    b.Navigation("ServiceProvider");
+                    b.Navigation("ServiceProviderProfile");
                 });
 
-            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProvider", b =>
+            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProviderProfile", b =>
                 {
                     b.HasOne("ApplicationUser", "User")
                         .WithOne("ServiceProviderProfile")
-                        .HasForeignKey("AgendaFacil.Domain.Entities.ServiceProvider", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AgendaFacil.Domain.Entities.ServiceProviderProfile", "UserId");
 
                     b.Navigation("User");
                 });
@@ -519,9 +551,9 @@ namespace AgendaFacil.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ServiceServiceProvider", b =>
+            modelBuilder.Entity("ServiceServiceProviderProfile", b =>
                 {
-                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProvider", null)
+                    b.HasOne("AgendaFacil.Domain.Entities.ServiceProviderProfile", null)
                         .WithMany()
                         .HasForeignKey("ServiceProvidersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -534,7 +566,7 @@ namespace AgendaFacil.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProvider", b =>
+            modelBuilder.Entity("AgendaFacil.Domain.Entities.ServiceProviderProfile", b =>
                 {
                     b.Navigation("Absences");
 

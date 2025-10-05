@@ -1,6 +1,6 @@
 ﻿using AgendaFacil.Api.Controllers;
 using AgendaFacil.Application.DTOs.Request;
-using AgendaFacil.Domain.Authentication;
+using AgendaFacil.Domain.Entities.Authentication;
 using AgendaFacil.Domain.Notifications;
 using Azure;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace JWTAuthentication.Controllers
@@ -51,11 +52,12 @@ namespace JWTAuthentication.Controllers
 
                 var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.Email!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
 
-            foreach (var userRole in roles)
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };    
+
+                foreach (var userRole in roles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
@@ -63,8 +65,10 @@ namespace JWTAuthentication.Controllers
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
 
                 var token = new JwtSecurityToken(
-                    expires: DateTime.Now.AddHours(3),
-                    claims: authClaims, 
+                    expires: DateTime.Now.AddHours(3),                    
+                    claims: authClaims,
+                    audience: _configuration["JWT:ValidAudience"],
+                    issuer: _configuration["JWT:ValidIssuer"],
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
@@ -92,8 +96,9 @@ namespace JWTAuthentication.Controllers
             ApplicationUser user = new ApplicationUser()
             {
                 Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = dto.Username       
+                FullName = dto.Fullname,
+                UserName = dto.Email,
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -114,9 +119,9 @@ namespace JWTAuthentication.Controllers
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] CreateUserRequestDTO dto)
+        public async Task<IActionResult> RegisterAdmin([FromQuery] string email, [FromQuery] string password)
         {
-            var userExists = await _userManager.FindByNameAsync(dto.Username);
+            var userExists = await _userManager.FindByEmailAsync(email);
             if (userExists != null)
             {
                 _notificationContext.AddNotification("Usuário", "Usuário ja existe");
@@ -124,11 +129,12 @@ namespace JWTAuthentication.Controllers
 
             ApplicationUser user = new ApplicationUser()
             {
-                Email = dto.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = dto.Username
+                Email = email,
+                UserName = email,
+                SecurityStamp = Guid.NewGuid().ToString()
             };
-            var result = await _userManager.CreateAsync(user, dto.Password);
+
+            var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
                 _notificationContext.AddNotification("Erro", "Erro ao criar o usuário");

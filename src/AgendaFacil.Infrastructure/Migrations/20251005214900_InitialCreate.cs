@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AgendaFacil.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,14 +55,16 @@ namespace AgendaFacil.Infrastructure.Migrations
                 name: "Services",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DefaultDurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     DefaultPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -179,12 +181,14 @@ namespace AgendaFacil.Infrastructure.Migrations
                 name: "ServiceProviderProfiles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Speciality = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,29 +197,30 @@ namespace AgendaFacil.Infrastructure.Migrations
                         name: "FK_ServiceProviderProfiles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Absence",
+                name: "Absences",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ServiceProviderId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ServiceProviderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Absence", x => x.Id);
+                    table.PrimaryKey("PK_Absences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Absence_ServiceProviderProfiles_ServiceProviderId",
-                        column: x => x.ServiceProviderId,
+                        name: "FK_Absences_ServiceProviderProfiles_ServiceProviderProfileId",
+                        column: x => x.ServiceProviderProfileId,
                         principalTable: "ServiceProviderProfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -225,18 +230,20 @@ namespace AgendaFacil.Infrastructure.Migrations
                 name: "Appointments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
-                    ServiceProviderId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -265,43 +272,45 @@ namespace AgendaFacil.Infrastructure.Migrations
                 name: "Availabilities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     EndTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    ServiceProviderId = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ServiceProviderProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Availabilities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Availabilities_ServiceProviderProfiles_ServiceProviderId",
-                        column: x => x.ServiceProviderId,
+                        name: "FK_Availabilities_ServiceProviderProfiles_ServiceProviderProfileId",
+                        column: x => x.ServiceProviderProfileId,
                         principalTable: "ServiceProviderProfiles",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceServiceProvider",
+                name: "ServiceServiceProviderProfile",
                 columns: table => new
                 {
-                    ServiceProvidersId = table.Column<int>(type: "int", nullable: false),
-                    ServicesId = table.Column<int>(type: "int", nullable: false)
+                    ServiceProvidersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServicesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceServiceProvider", x => new { x.ServiceProvidersId, x.ServicesId });
+                    table.PrimaryKey("PK_ServiceServiceProviderProfile", x => new { x.ServiceProvidersId, x.ServicesId });
                     table.ForeignKey(
-                        name: "FK_ServiceServiceProvider_ServiceProviderProfiles_ServiceProvidersId",
+                        name: "FK_ServiceServiceProviderProfile_ServiceProviderProfiles_ServiceProvidersId",
                         column: x => x.ServiceProvidersId,
                         principalTable: "ServiceProviderProfiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ServiceServiceProvider_Services_ServicesId",
+                        name: "FK_ServiceServiceProviderProfile_Services_ServicesId",
                         column: x => x.ServicesId,
                         principalTable: "Services",
                         principalColumn: "Id",
@@ -309,9 +318,9 @@ namespace AgendaFacil.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Absence_ServiceProviderId",
-                table: "Absence",
-                column: "ServiceProviderId");
+                name: "IX_Absences_ServiceProviderProfileId",
+                table: "Absences",
+                column: "ServiceProviderProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_ServiceId",
@@ -368,19 +377,20 @@ namespace AgendaFacil.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Availabilities_ServiceProviderId",
+                name: "IX_Availabilities_ServiceProviderProfileId",
                 table: "Availabilities",
-                column: "ServiceProviderId");
+                column: "ServiceProviderProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceProviderProfiles_UserId",
                 table: "ServiceProviderProfiles",
                 column: "UserId",
-                unique: true);
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceServiceProvider_ServicesId",
-                table: "ServiceServiceProvider",
+                name: "IX_ServiceServiceProviderProfile_ServicesId",
+                table: "ServiceServiceProviderProfile",
                 column: "ServicesId");
         }
 
@@ -388,7 +398,7 @@ namespace AgendaFacil.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Absence");
+                name: "Absences");
 
             migrationBuilder.DropTable(
                 name: "Appointments");
@@ -412,7 +422,7 @@ namespace AgendaFacil.Infrastructure.Migrations
                 name: "Availabilities");
 
             migrationBuilder.DropTable(
-                name: "ServiceServiceProvider");
+                name: "ServiceServiceProviderProfile");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
