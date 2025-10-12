@@ -7,4 +7,8 @@ public class Absence : BaseEntity
     public DateTime EndDateTime { get; set; } 
     public Guid? ServiceProviderProfileId { get; set; }
     public virtual ServiceProviderProfile? ServiceProviderProfile { get; set; }
+    public Absence()
+    {
+
+    }
 }

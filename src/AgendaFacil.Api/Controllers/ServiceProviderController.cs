@@ -19,13 +19,22 @@ public class ServiceProviderController : BaseController
         _serviceProviderService = serviceProvider;
     }
 
-    [HttpPost]
-    [Route("speciality")]
+    [HttpPost("specialities")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateSpeciality([FromBody] string? speciality, CancellationToken cancellationToken)
     {
         var response = await _serviceProviderService.CreateServiceProvider(speciality, cancellationToken);
+
+        return CreateResponse(response);
+    }
+
+    [HttpGet("specialities")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSpeciality(CancellationToken cancellationToken)
+    {
+        var response = await _serviceProviderService.GetSpecialityByUserId(cancellationToken);
 
         return CreateResponse(response);
     }

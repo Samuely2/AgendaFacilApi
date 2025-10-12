@@ -15,5 +15,24 @@ public class Appointment : BaseEntity
     public Guid? ServiceProviderId { get; set; }
     public virtual ServiceProviderProfile? ServiceProvider { get; set; }
 
+    public Appointment()
+    {
+
+    }
+
+    public Appointment(DateTime startDateTime, DateTime endDateTime, AppointmentStatusEnum status, decimal price, int durationInMinutes, Guid userId, ApplicationUser? user, Guid serviceId, Service? service, Guid? serviceProviderId, ServiceProviderProfile? serviceProvider)
+    {
+        StartDateTime = startDateTime;
+        EndDateTime = endDateTime;
+        Status = status;
+        Price = price;
+        DurationInMinutes = durationInMinutes;
+        UserId = userId;
+        User = user;
+        ServiceId = serviceId;
+        Service = service;
+        ServiceProviderId = serviceProviderId;
+        ServiceProvider = serviceProvider;
+    }
 }
 

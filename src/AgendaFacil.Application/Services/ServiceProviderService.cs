@@ -37,4 +37,19 @@ public class ServiceProviderService : IServiceProviderService
         await _unitOfWork.Commit(cancellationToken);
         return entity.Speciality;
     }
+
+    public async Task<List<string?>?> GetSpecialityByUserId(CancellationToken cancellationToken)
+    {
+        Guid? userId = _userContextService.UserId;
+
+        var speciality = await _serviceProviderRepository.GetSpecialityByUserId(userId, cancellationToken);
+
+        if (speciality is null)
+        {
+            return null;
+        }
+
+        return speciality;
+    }
+   
 }

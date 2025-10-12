@@ -1,4 +1,5 @@
-﻿using AgendaFacil.Application.Interface.Repositories;
+﻿using AgendaFacil.Application.Interface;
+using AgendaFacil.Application.Interface.Repositories;
 using AgendaFacil.Application.Interfaces;
 using AgendaFacil.Application.Services;
 using AgendaFacil.Domain.Notifications;
@@ -15,6 +16,9 @@ public static class ApplicationConfiguration
         services.AddScoped<IUserContextService, UserContextService>();
         services.AddScoped<IServiceProviderService, ServiceProviderService>();
         services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
+        services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
     }
