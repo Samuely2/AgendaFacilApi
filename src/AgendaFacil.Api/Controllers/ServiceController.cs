@@ -24,10 +24,32 @@ public class ServiceController : BaseController
     [HttpPost("create-service")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status201Created)]
-    public async Task<IActionResult> CreateSpeciality([FromBody] ServiceRequestDTO dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateService([FromBody] ServiceRequestDTO dto, CancellationToken cancellationToken)
     {
         var response = await _serviceService.CreateServiceAsync(dto, cancellationToken);
 
         return CreateResponse(response);
     }
+
+    [HttpGet("services")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetService(CancellationToken cancellationToken)
+    {
+        var response = await _serviceService.GetAllServices(cancellationToken);
+
+        return CreateResponse(response);
+    }
+
+    [HttpDelete("services")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteService([FromQuery] Guid serviceId, CancellationToken cancellationToken)
+    {
+        var response = await _serviceService.DeleteServiceById(serviceId, cancellationToken);
+
+        return CreateResponse(response);
+    }
 }
+
+

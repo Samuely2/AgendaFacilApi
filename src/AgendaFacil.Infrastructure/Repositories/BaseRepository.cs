@@ -19,8 +19,13 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         entity.CreatedDate = DateTime.UtcNow;
         DbContext.Set<TEntity>().Add(entity);
     }
-    public void Delete(TEntity entity)
+    public void Delete(TEntity? entity)
     {
+        if (entity is null)
+        {
+            return;
+        }
+
         DbContext.Set<TEntity>().Remove(entity);
     }
     public void Update(TEntity entity)

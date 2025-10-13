@@ -37,4 +37,31 @@ public class ServiceService : IServiceService
         await _unitOfWork.Commit(cancellationToken);
         return entity;
     }
+
+    public async Task<List<Service>?> GetAllServices(CancellationToken cancellationToken)
+    {
+        var entity = await _serviceRepository.GetAllServices(cancellationToken);
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        return entity;
+    }
+
+    public async Task<bool> DeleteServiceById(Guid serviceId, CancellationToken cancellationToken)
+    {
+        var entity = await _serviceRepository.GetServiceById(serviceId, cancellationToken);
+
+        if (entity == null)
+        {
+            return false;
+        }
+
+         _serviceRepository.Delete(entity);
+        await _unitOfWork.Commit(cancellationToken);
+
+        return true;
+    }
 }
