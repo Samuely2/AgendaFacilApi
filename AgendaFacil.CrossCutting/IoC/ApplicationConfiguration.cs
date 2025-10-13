@@ -18,6 +18,8 @@ public static class ApplicationConfiguration
         services.AddScoped<IServiceProviderRepository, ServiceProviderRepository>();
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

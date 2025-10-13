@@ -20,6 +20,17 @@ public class Appointment : BaseEntity
 
     }
 
+    public Appointment(Guid serviceId, Guid serviceProviderId, Guid userId, DateTime startDateTime, DateTime endDateTime, decimal price, int durationInMinutes)
+    {
+        ServiceId = serviceId;
+        ServiceProviderId = serviceProviderId;
+        UserId = userId;
+        StartDateTime = startDateTime;
+        EndDateTime = endDateTime;
+        Price = price;
+        DurationInMinutes = durationInMinutes;
+    }
+
     public Appointment(DateTime startDateTime, DateTime endDateTime, AppointmentStatusEnum status, decimal price, int durationInMinutes, Guid userId, ApplicationUser? user, Guid serviceId, Service? service, Guid? serviceProviderId, ServiceProviderProfile? serviceProvider)
     {
         StartDateTime = startDateTime;

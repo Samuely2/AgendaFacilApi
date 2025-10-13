@@ -52,4 +52,8 @@ public class ServiceProviderService : IServiceProviderService
         return speciality;
     }
    
+    public async Task AddServiceToServiceProvider(Guid serviceId, CancellationToken cancellationToken)
+    {
+        Guid? userId = _userContextService.UserId;
+    }
 }
