@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AgendaFacil.Api.Controllers;
 
+[Authorize]
 [Route("api/service")]
 [ApiController]
 public class ServiceController : BaseController
@@ -41,12 +42,23 @@ public class ServiceController : BaseController
         return CreateResponse(response);
     }
 
-    [HttpDelete("services")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> DeleteService([FromQuery] Guid serviceId, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteServiceById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var response = await _serviceService.DeleteServiceById(serviceId, cancellationToken);
+        var response = await _serviceService.DeleteServiceById(id, cancellationToken);
+
+        return CreateResponse(response);
+    }
+
+   
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> UpdateServiceById([FromRoute] Guid id, [FromBody] ServiceRequestDTO dto, CancellationToken cancellationToken)
+    {
+        var response = await _serviceService.UpdateServiceById(id, dto, cancellationToken);
 
         return CreateResponse(response);
     }

@@ -27,4 +27,15 @@ public class ServiceProviderRepository : BaseRepository<ServiceProviderProfile>,
 
         return speciality;
     }
+
+    public async Task <List<ServiceProviderProfile>?> GetServiceProviderByUserIdAsync (Guid? userid, CancellationToken cancellationToken)
+    {
+        var entity = await _context.ServiceProviderProfiles
+            .Where(x => x.UserId == userid)
+            .ToListAsync(cancellationToken);
+
+        if (entity is null) return null;
+
+        return entity;
+    }
 }

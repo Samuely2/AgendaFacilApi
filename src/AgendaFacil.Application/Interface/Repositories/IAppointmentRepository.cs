@@ -4,4 +4,5 @@ namespace AgendaFacil.Application.Interface.Repositories;
 
 public interface IAppointmentRepository : IBaseRepository<Appointment>
 {
+    Task<List<Appointment>?> GetAppointmentsByUserIdAsync(Guid? userId, CancellationToken cancellationToken);
 }

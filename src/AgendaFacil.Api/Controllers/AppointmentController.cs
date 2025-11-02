@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AgendaFacil.Api.Controllers;
 
-
+[Authorize]
 [Route("api/appointment")]
 [ApiController]
 public class AppointmentController : BaseController
@@ -22,13 +22,24 @@ public class AppointmentController : BaseController
         _appointmentService = appointmentService;
     }
 
-    [Authorize(Roles = "Client")]
+    [Authorize]
     [HttpPost("create-appointment")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status201Created)]
-    public async Task<IActionResult> CreateSpeciality([FromQuery] AppointmentRequestDTO dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAppointment([FromQuery] AppointmentRequestDTO dto, CancellationToken cancellationToken)
     {
         var response = await _appointmentService.CreateAppointment(dto, cancellationToken);
+
+        return CreateResponse(response);
+    }
+
+    [Authorize]
+    [HttpGet("all")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<AppointmentResponseDTO>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> GetAllAppointments(CancellationToken cancellationToken)
+    {
+        var response = await _appointmentService.GetAppointmentsByUserIdAsync(cancellationToken);
 
         return CreateResponse(response);
     }

@@ -64,4 +64,22 @@ public class ServiceService : IServiceService
 
         return true;
     }
+
+    public async Task<Service?> UpdateServiceById(Guid serviceId, ServiceRequestDTO dto, CancellationToken cancellationToken)
+    {
+        var entity = await _serviceRepository.GetServiceById(serviceId, cancellationToken);
+
+        if (entity == null)
+        {
+            return null; 
+        }
+
+        entity.Update(dto.Name, dto.Description, dto.DefaultDurationInMinutes, dto.DefaultPrice);
+
+        _serviceRepository.Update(entity);
+
+        await _unitOfWork.Commit(cancellationToken);
+
+        return entity;        
+    }
 }

@@ -23,5 +23,41 @@ public static class AppointmentMapper
             dto.DurationInMinutes
         );
     }
+    public static AppointmentResponseDTO? EntityToDto(Appointment entity)
+    {
+        if (entity == null) return null;
+
+        return new AppointmentResponseDTO
+        (
+            entity.Id,
+            entity.ServiceId,
+            entity.ServiceProviderId,
+            entity.StartDateTime,
+            entity.EndDateTime,
+            entity.Status,
+            entity.Price,
+            entity.DurationInMinutes
+        );
+    }
+
+    public static List<AppointmentResponseDTO> EntityListToDtoList(IEnumerable<Appointment> entities)
+    {
+        if (entities == null)
+            return new List<AppointmentResponseDTO>();
+
+        return entities
+            .Where(e => e != null)
+            .Select(e => new AppointmentResponseDTO(
+                e.Id,
+                e.ServiceId,
+                e.ServiceProviderId,
+                e.StartDateTime,
+                e.EndDateTime,
+                e.Status,
+                e.Price,
+                e.DurationInMinutes
+            ))
+            .ToList();
+    }
 }
 

@@ -1,4 +1,6 @@
-﻿namespace AgendaFacil.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore.Update.Internal;
+
+namespace AgendaFacil.Domain.Entities;
 
 public class Service : BaseEntity
 {
@@ -19,4 +21,12 @@ public class Service : BaseEntity
         DefaultDurationInMinutes = defaultDurationInMinutes;
         DefaultPrice = defaultPrice;
     }   
+
+    public void Update(string? name, string? description, int defaultDurationInMinutes, decimal defaultPrice)
+    {
+        Name = name;
+        Description = description;
+        DefaultDurationInMinutes = defaultDurationInMinutes;
+        DefaultPrice = defaultPrice;
+    }
 }

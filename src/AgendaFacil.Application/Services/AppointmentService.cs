@@ -1,4 +1,5 @@
 ﻿using AgendaFacil.Application.DTOs.Request;
+using AgendaFacil.Application.DTOs.Response;
 using AgendaFacil.Application.Interface;
 using AgendaFacil.Application.Interface.Repositories;
 using AgendaFacil.Application.Interfaces;
@@ -36,5 +37,19 @@ public class AppointmentService : IAppointmentService
         _appointmentRepository.Create(entity);
         await _unitOfWork.Commit(cancellationToken);
         return entity;
+    }
+
+    public async Task<List<AppointmentResponseDTO>?> GetAppointmentsByUserIdAsync(CancellationToken cancellationToken)
+    {
+        Guid? userId = _userContextService.UserId;
+
+        var entity = await _appointmentRepository.GetAppointmentsByUserIdAsync(userId, cancellationToken);
+
+        if (entity is null) return null;
+
+        var dto = AppointmentMapper.EntityListToDtoList(entity);
+
+
+        return dto;
     }
 }

@@ -52,8 +52,14 @@ public class ServiceProviderService : IServiceProviderService
         return speciality;
     }
    
-    public async Task AddServiceToServiceProvider(Guid serviceId, CancellationToken cancellationToken)
+    public async Task<List<ServiceProviderProfile>?> GetServiceProviderByUserId(CancellationToken cancellationToken)
     {
         Guid? userId = _userContextService.UserId;
+
+        var entity = await _serviceProviderRepository.GetServiceProviderByUserIdAsync(userId, cancellationToken);
+
+        if (entity is null) return null;
+
+        return entity;
     }
 }

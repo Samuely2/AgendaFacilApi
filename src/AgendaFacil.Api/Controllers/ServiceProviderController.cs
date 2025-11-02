@@ -38,4 +38,14 @@ public class ServiceProviderController : BaseController
 
         return CreateResponse(response);
     }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetServiceProvider(CancellationToken cancellationToken)
+    {
+        var response = await _serviceProviderService.GetServiceProviderByUserId(cancellationToken);
+
+        return CreateResponse(response);
+    }
 }
