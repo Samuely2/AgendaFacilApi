@@ -8,4 +8,5 @@ public interface IServiceProviderService
 {
     Task<ServiceProviderResponseDTO?> CreateServiceProvider(ServiceProviderRequestDTO dto, CancellationToken cancellationToken);
     Task<List<ServiceProviderResponseDTO>?> GetAllServiceProviders(CancellationToken cancellationToken);
+    Task<ServiceProviderResponseDTO?> GetServiceProviderById(Guid id, CancellationToken cancellationToken);
 }

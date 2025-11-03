@@ -53,4 +53,16 @@ public class ServiceProviderService : IServiceProviderService
 
         return dto;
     }
+
+    public async Task<ServiceProviderResponseDTO?> GetServiceProviderById(Guid id, CancellationToken cancellationToken)
+    {
+        var entity = await _serviceProviderRepository.GetServiceProfileById(id, cancellationToken);
+
+        if (entity is null) return null;
+
+        var dto = ServiceProviderMapper.EntityToDto(entity);
+
+        return dto;
+    }
+
 }

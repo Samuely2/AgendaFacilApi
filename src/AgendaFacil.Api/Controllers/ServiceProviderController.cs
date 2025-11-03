@@ -35,7 +35,21 @@ public class ServiceProviderController : BaseController
 
         return CreateResponse(response);
     }
- 
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<List<ServiceProviderResponseDTO>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetServiceProvider([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var response = await _serviceProviderService.GetServiceProviderById(id, cancellationToken);
+
+        if (response == null)
+        {
+            _notificationContext.AddNotification("Id", "Prestador de serviços não encontrado com o Id informado");
+            return CreateResponse(response);
+        }
+
+        return CreateResponse(response);
+    }
 
     [HttpGet("all")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]

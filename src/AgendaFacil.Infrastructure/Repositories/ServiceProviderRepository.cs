@@ -13,6 +13,18 @@ public class ServiceProviderRepository : BaseRepository<ServiceProviderProfile>,
         _context = context;
     }
 
+    public async Task<ServiceProviderProfile?> GetServiceProfileById(Guid id, CancellationToken cancellationToken)
+    {
+
+        var entity = await _context.ServiceProviderProfiles
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (entity is null) return null;
+
+        return entity;
+    }
+
     public async Task<ServiceProviderProfile?> GetServiceProviderByUserIdAsync(Guid? userid, CancellationToken cancellationToken)
     {
         var entity = await _context.ServiceProviderProfiles
