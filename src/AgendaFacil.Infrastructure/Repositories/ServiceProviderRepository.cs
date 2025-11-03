@@ -13,25 +13,20 @@ public class ServiceProviderRepository : BaseRepository<ServiceProviderProfile>,
         _context = context;
     }
 
-    public async Task<List<string?>?> GetSpecialityByUserId(Guid? userId, CancellationToken cancellationToken)
-    {
-        var speciality = await _context.ServiceProviderProfiles
-            .Where(x => x.UserId == userId)
-            .Select(x => x.Speciality)
-            .ToListAsync(cancellationToken);
-            
-        if (speciality is null)
-        {
-            return null;
-        }
-
-        return speciality;
-    }
-
-    public async Task <List<ServiceProviderProfile>?> GetServiceProviderByUserIdAsync (Guid? userid, CancellationToken cancellationToken)
+    public async Task<ServiceProviderProfile?> GetServiceProviderByUserIdAsync(Guid? userid, CancellationToken cancellationToken)
     {
         var entity = await _context.ServiceProviderProfiles
             .Where(x => x.UserId == userid)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (entity is null) return null;
+
+        return entity;
+    }
+
+    public async Task<List<ServiceProviderProfile>?> GetAll(CancellationToken cancellationToken)
+    {
+        var entity = await _context.ServiceProviderProfiles
             .ToListAsync(cancellationToken);
 
         if (entity is null) return null;

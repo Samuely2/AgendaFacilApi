@@ -1,8 +1,6 @@
 ﻿using AgendaFacil.Application.DTOs.Request;
 using AgendaFacil.Application.DTOs.Response;
 using AgendaFacil.Application.Interface;
-using AgendaFacil.Application.Interfaces;
-using AgendaFacil.Application.Services;
 using AgendaFacil.Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +30,22 @@ public class ServiceController : BaseController
         return CreateResponse(response);
     }
 
-    [HttpGet("services")]
+    [HttpGet("all")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<List<ServiceResponseDTO>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetService(CancellationToken cancellationToken)
     {
         var response = await _serviceService.GetAllServices(cancellationToken);
+
+        return CreateResponse(response);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<ServiceResponseDTO>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> GetServiceById([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var response = await _serviceService.GetServiceById(id, cancellationToken);
 
         return CreateResponse(response);
     }

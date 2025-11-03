@@ -1,5 +1,8 @@
-﻿using AgendaFacil.Application.Interface.Repositories;
+﻿using AgendaFacil.Application.DTOs.Request;
+using AgendaFacil.Application.DTOs.Response;
+using AgendaFacil.Application.Interface.Repositories;
 using AgendaFacil.Application.Interfaces;
+using AgendaFacil.Application.Mapper;
 using AgendaFacil.Domain.Entities;
 using AgendaFacil.Domain.Notifications;
 
@@ -17,49 +20,37 @@ public class ServiceProviderService : IServiceProviderService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<string?> CreateServiceProvider(string? speciality, CancellationToken cancellationToken)
+    public async Task<ServiceProviderResponseDTO?> CreateServiceProvider(ServiceProviderRequestDTO dto, CancellationToken cancellationToken)
     {
-        if (speciality == null)
+        if (dto == null)
         {
             return null;
         }
 
         Guid? userId = _userContextService.UserId;
 
-        var entity = new ServiceProviderProfile
-        {
-            UserId = userId,
-            Speciality = speciality
-            
-        };
+        var existingEntity = await _serviceProviderRepository.GetServiceProviderByUserIdAsync(userId, cancellationToken);
+
+        if (existingEntity != null) return null;
+
+        var entity = ServiceProviderMapper.DtoToEntity(dto);
+
+        if (entity == null) return null;
 
         _serviceProviderRepository.Create(entity);
         await _unitOfWork.Commit(cancellationToken);
-        return entity.Speciality;
+
+        return ServiceProviderMapper.EntityToDto(entity);
     }
 
-    public async Task<List<string?>?> GetSpecialityByUserId(CancellationToken cancellationToken)
+    public async Task<List<ServiceProviderResponseDTO>?> GetAllServiceProviders(CancellationToken cancellationToken)
     {
-        Guid? userId = _userContextService.UserId;
-
-        var speciality = await _serviceProviderRepository.GetSpecialityByUserId(userId, cancellationToken);
-
-        if (speciality is null)
-        {
-            return null;
-        }
-
-        return speciality;
-    }
-   
-    public async Task<List<ServiceProviderProfile>?> GetServiceProviderByUserId(CancellationToken cancellationToken)
-    {
-        Guid? userId = _userContextService.UserId;
-
-        var entity = await _serviceProviderRepository.GetServiceProviderByUserIdAsync(userId, cancellationToken);
+        var entity = await _serviceProviderRepository.GetAll(cancellationToken);
 
         if (entity is null) return null;
 
-        return entity;
+        var dto = ServiceProviderMapper.EntityListToDtoList(entity);
+
+        return dto;
     }
 }

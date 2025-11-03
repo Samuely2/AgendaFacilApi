@@ -42,14 +42,15 @@ public class AppointmentService : IAppointmentService
     public async Task<List<AppointmentResponseDTO>?> GetAppointmentsByUserIdAsync(CancellationToken cancellationToken)
     {
         Guid? userId = _userContextService.UserId;
+        string? role = _userContextService.Role;
 
-        var entity = await _appointmentRepository.GetAppointmentsByUserIdAsync(userId, cancellationToken);
+        var entity = await _appointmentRepository.GetAppointmentsByUserIdAsync(userId, role, cancellationToken);
 
         if (entity is null) return null;
 
         var dto = AppointmentMapper.EntityListToDtoList(entity);
 
-
         return dto;
+ 
     }
-}
+ }

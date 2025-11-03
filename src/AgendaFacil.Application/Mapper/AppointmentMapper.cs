@@ -1,8 +1,6 @@
 ﻿using AgendaFacil.Application.DTOs.Request;
 using AgendaFacil.Application.DTOs.Response;
 using AgendaFacil.Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
 
 namespace AgendaFacil.Application.Mapper;
 

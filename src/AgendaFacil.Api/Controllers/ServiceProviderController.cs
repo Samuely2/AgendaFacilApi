@@ -1,4 +1,5 @@
-﻿using AgendaFacil.Application.DTOs.Response;
+﻿using AgendaFacil.Application.DTOs.Request;
+using AgendaFacil.Application.DTOs.Response;
 using AgendaFacil.Application.Interfaces;
 using AgendaFacil.Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
@@ -12,39 +13,36 @@ namespace AgendaFacil.Api.Controllers;
 public class ServiceProviderController : BaseController
 {
     private readonly IServiceProviderService _serviceProviderService;
-
+     
     public ServiceProviderController(IServiceProviderService serviceProvider, NotificationContext notificationContext)
         : base(notificationContext)
     {
         _serviceProviderService = serviceProvider;
     }
 
-    [HttpPost("specialities")]
+    [HttpPost()]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status201Created)]
-    public async Task<IActionResult> CreateSpeciality([FromBody] string? speciality, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(Response<ServiceProviderResponseDTO>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateServiceProvider([FromBody] ServiceProviderRequestDTO dto, CancellationToken cancellationToken)
     {
-        var response = await _serviceProviderService.CreateServiceProvider(speciality, cancellationToken);
+        var response = await _serviceProviderService.CreateServiceProvider(dto, cancellationToken);
+
+        if (response == null)
+        {
+            _notificationContext.AddNotification("Usuário", "Usuário atual já é um prestador de serviços");
+            return CreateResponse(response);
+        }
 
         return CreateResponse(response);
     }
+ 
 
-    [HttpGet("specialities")]
+    [HttpGet("all")]
     [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetSpeciality(CancellationToken cancellationToken)
-    {
-        var response = await _serviceProviderService.GetSpecialityByUserId(cancellationToken);
-
-        return CreateResponse(response);
-    }
-
-    [HttpGet]
-    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<List<ServiceProviderResponseDTO>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetServiceProvider(CancellationToken cancellationToken)
     {
-        var response = await _serviceProviderService.GetServiceProviderByUserId(cancellationToken);
+        var response = await _serviceProviderService.GetAllServiceProviders(cancellationToken);
 
         return CreateResponse(response);
     }

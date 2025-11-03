@@ -26,10 +26,29 @@ public static class ServiceMapper
 
         return new
         (
+            entity.Id,
             entity.Name,
             entity.Description,
             entity.DefaultDurationInMinutes,
             entity.DefaultPrice
         );
     }
+
+    public static List<ServiceResponseDTO> EntityToDtoList(IEnumerable<Service> entities)
+    {
+        if (entities == null)
+            return new List<ServiceResponseDTO>();
+
+        return entities
+            .Where(e => e != null)
+            .Select(e => new ServiceResponseDTO(
+                e.Id,
+                e.Name,
+                e.Description,
+                e.DefaultDurationInMinutes,
+                e.DefaultPrice
+                ))
+            .ToList();
+    }
+
 }

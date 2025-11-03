@@ -38,7 +38,7 @@ public class ServiceService : IServiceService
         return entity;
     }
 
-    public async Task<List<Service>?> GetAllServices(CancellationToken cancellationToken)
+    public async Task<List<ServiceResponseDTO>?> GetAllServices(CancellationToken cancellationToken)
     {
         var entity = await _serviceRepository.GetAllServices(cancellationToken);
 
@@ -47,7 +47,9 @@ public class ServiceService : IServiceService
             return null;
         }
 
-        return entity;
+        var dto = ServiceMapper.EntityToDtoList(entity);
+
+        return dto;
     }
 
     public async Task<bool> DeleteServiceById(Guid serviceId, CancellationToken cancellationToken)
@@ -63,6 +65,20 @@ public class ServiceService : IServiceService
         await _unitOfWork.Commit(cancellationToken);
 
         return true;
+    }
+
+    public async Task<ServiceResponseDTO?> GetServiceById(Guid serviceId, CancellationToken cancellationToken)
+    {
+        var entity = await _serviceRepository.GetServiceById(serviceId, cancellationToken);
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        var dto = ServiceMapper.EntityToDto(entity);
+
+        return dto;
     }
 
     public async Task<Service?> UpdateServiceById(Guid serviceId, ServiceRequestDTO dto, CancellationToken cancellationToken)

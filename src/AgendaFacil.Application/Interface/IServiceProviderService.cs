@@ -1,10 +1,11 @@
-﻿using AgendaFacil.Domain.Entities;
+﻿using AgendaFacil.Application.DTOs.Request;
+using AgendaFacil.Application.DTOs.Response;
+using AgendaFacil.Domain.Entities;
 
 namespace AgendaFacil.Application.Interfaces;
 
 public interface IServiceProviderService
 {
-    Task<string?> CreateServiceProvider(string? speciality, CancellationToken cancellationToken);
-    Task<List<string?>?> GetSpecialityByUserId(CancellationToken cancellationToken);
-    Task<List<ServiceProviderProfile>?> GetServiceProviderByUserId(CancellationToken cancellationToken);
+    Task<ServiceProviderResponseDTO?> CreateServiceProvider(ServiceProviderRequestDTO dto, CancellationToken cancellationToken);
+    Task<List<ServiceProviderResponseDTO>?> GetAllServiceProviders(CancellationToken cancellationToken);
 }
