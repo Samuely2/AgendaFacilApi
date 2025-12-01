@@ -43,4 +43,14 @@ public class AppointmentController : BaseController
 
         return CreateResponse(response);
     }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(Response<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> DeleteAppointment([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var response = await _appointmentService.DeleteAppointmentsById(id, cancellationToken);
+
+        return CreateResponse(response);
+    }
 }

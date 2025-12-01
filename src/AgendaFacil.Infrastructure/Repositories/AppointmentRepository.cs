@@ -22,6 +22,21 @@ public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRe
         return entity;
     }
 
+    public async Task<Appointment?> GetAppointmentByid(Guid id, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Appointments
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        return entity;
+    }
+
+
     private async Task<List<Appointment>?> GetAppointmentsByRoleId(Guid? userId, string? role, CancellationToken cancellationToken)
     {
         if (role == "Client")

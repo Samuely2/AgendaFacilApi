@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace AgendaFacil.Api.Controllers;
 
 [Route("api/serviceProvider")]
-[Authorize(Roles = "ServiceProvider")]
 [ApiController]
 public class ServiceProviderController : BaseController
 {

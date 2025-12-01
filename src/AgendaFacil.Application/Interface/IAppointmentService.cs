@@ -8,4 +8,5 @@ public interface IAppointmentService
 {
     Task<Appointment?> CreateAppointment(AppointmentRequestDTO dto, CancellationToken cancellationToken);
     Task<List<AppointmentResponseDTO>?> GetAppointmentsByUserIdAsync(CancellationToken cancellationToken);
+    Task<bool> DeleteAppointmentsById(Guid appointmentId, CancellationToken cancellationToken);
 }

@@ -53,4 +53,22 @@ public class AppointmentService : IAppointmentService
         return dto;
  
     }
+
+    public async Task<bool> DeleteAppointmentsById(Guid appointmentId, CancellationToken cancellationToken)
+    {
+        Guid? userId = _userContextService.UserId;
+        string? role = _userContextService.Role;
+
+        var appointment = await _appointmentRepository.GetAppointmentByid(appointmentId, cancellationToken);
+
+        if (appointment == null)
+        {
+            return false;
+        } 
+
+        _appointmentRepository.Delete(appointment);
+        await _unitOfWork.Commit(cancellationToken);
+
+        return true;
+    }
  }
